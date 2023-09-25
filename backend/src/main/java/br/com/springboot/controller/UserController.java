@@ -15,7 +15,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/")
-    public User inserir(@RequestBody User user){
-        return userService.inserir(user);
+    public User cadastro(@RequestBody User user){
+        return userService.cadastro(user);
     }
 }

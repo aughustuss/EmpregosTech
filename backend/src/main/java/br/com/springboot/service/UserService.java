@@ -18,7 +18,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User inserir(User user){
+    public User cadastro(User user){
         return userRepository.save(user);
     }
 
