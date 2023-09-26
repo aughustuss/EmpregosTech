@@ -2,7 +2,7 @@
 
 const FilterSearch = () => {
   return (
-    <div className="mx-2 mt-4">
+    <div className="mx-2 mt-2 w-1/2">
       <form className="flex items-center">
         <label htmlFor="simple-search" className="sr-only">
           Search

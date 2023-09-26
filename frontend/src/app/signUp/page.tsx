@@ -30,7 +30,7 @@ const SignIn = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full h-screen justify-center ">
+    <div className="flex flex-col items-center w-full h-screen overflow-y-auto justify-center ">
       <div className="bg-white p-8  w-full max-w-md  ">
         <Heading
           title="Olá, Bem vindo(a) de volta"

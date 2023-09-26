@@ -30,11 +30,11 @@ const SignIn = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full h-screen justify-center ">
-      <div className="bg-white p-8 w-full max-w-md max-sm:mt-28 ">
+    <div className="flex flex-col items-center w-full h-auto justify-center ">
+      <div className="bg-white p-6  w-full md:w-1/3 ">
         <Heading title="Olá, Bem vindo(a)" subtitle="Crie sua Conta" />
         <form
-          className="mt-4 flex flex-col gap-y-3"
+          className="mt-4 flex flex-col gap-y-3 w-full"
           onSubmit={handleSubmit(onSubmit)}
         >
           <Input

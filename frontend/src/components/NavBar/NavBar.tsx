@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
 import NavBarItem from "./NavBarItem";
@@ -15,8 +14,8 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="bg-white z-10">
-      <div className="flex flex-wrap items-center justify-between p-2 shadow-sm mx-auto">
+    <nav className="bg-white fixed top-0 w-full z-10 ">
+      <div className="flex flex-wrap items-center justify-between p-4 shadow-sm mx-auto">
         <Link href="/" className="flex items-center justify-center ">
           <Logo />
         </Link>
