@@ -15,35 +15,43 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    private BCryptPasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
+    private BCryptPasswordEncoder passwordEncoder;
+
+    public UserService() {
+        this.passwordEncoder = new BCryptPasswordEncoder();
+    }
+
+    public BCryptPasswordEncoder passwordEncoder() {
+        return passwordEncoder;
     }
 
     public List<User> listarTodos() {
         return userRepository.findAll();
     }
 
+
     public User cadastro(User user){
         
-        User exitsUser = userRepository.findByUsername(user.getUsername());
+        User exitsUser = userRepository.findByUsername(user.getNome());
         
         if(exitsUser!=null){
-            throw new Error("Usuário já existe")
+            throw new Error("Usuário já existe");
         }
 
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
+        String password = user.getSenha();
+        String encodedPassword = passwordEncoder.encode(password);
+        user.setSenha(encodedPassword);
         return userRepository.save(user);
     }
 
     public User autenticar(String username, String senha){
         User user = userRepository.findByUsername(username);
 
-        if (user != null && passwordEncoder.matches(senha, user.getPassword())) {
-            return user; // Autenticação bem-sucedida
+        if (user != null && passwordEncoder.matches(senha, user.getSenha())) {
+            return user;
         }
 
-        return null; // Falha na autenticação
+        return null;
     }
     }
 
