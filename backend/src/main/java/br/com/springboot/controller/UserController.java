@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import br.com.springboot.model.User;
 import br.com.springboot.repository.UserRepository;
-import br.com.springboot.service.UserService;
 
 @RestController
 @RequestMapping("user")
@@ -24,6 +23,17 @@ public class UserController {
         return UserList;
     }
 
+    @PostMapping
+    public void cadastro(User user){
+
+        User exitsUser = userRepository.findByUsername(user.getNome());
+
+        if(exitsUser!=null){
+            throw new Error("Usuário já existe");
+        }
+
+        userRepository.save(user);
+    }
 
     
 }

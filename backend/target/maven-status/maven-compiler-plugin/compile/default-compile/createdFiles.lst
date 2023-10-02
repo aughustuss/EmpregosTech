@@ -1,0 +1,5 @@
+br\com\springboot\controller\UserController.class
+br\com\springboot\service\UserService.class
+br\com\springboot\repository\UserRepository.class
+br\com\springboot\model\User.class
+br\com\springboot\SpringbootApplication.class
