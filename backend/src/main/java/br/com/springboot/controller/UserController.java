@@ -27,9 +27,9 @@ public class UserController {
     }
 
     @PostMapping("/cadastro")
-    public void cadastro(User user){
+    public void cadastro(@RequestBody User user){
 
-        User exitsUser = userRepository.findByUsername(user.getNome());
+        User exitsUser = userRepository.findByUsername(user.getUsername());
 
         if(exitsUser!=null){
             throw new Error("Usuário já existe");
@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(String email,String senha){
+    public String login(@RequestBody String email,String senha){
         User user = userRepository.findByUsername(email);
         if(user != null){
             if(passwordEncoder.matches(senha, user.getSenha())){
