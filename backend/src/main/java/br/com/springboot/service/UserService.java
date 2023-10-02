@@ -3,7 +3,6 @@ package br.com.springboot.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.springboot.model.User;
@@ -15,10 +14,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-
-    public List<User> listarTodos() {
-        return userRepository.findAll();
-    }
 
 
     public User cadastro(User user){
