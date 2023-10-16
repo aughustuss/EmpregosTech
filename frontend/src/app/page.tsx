@@ -11,8 +11,8 @@ const HomePage = () => {
       <NavBar />
       <div className="w-full h-full bg-[#1727eb] overflow-y-hidden pt-12  md:pt-12 ">
         <div className="h-full">
-          <section className="flex w-full flex-row h-[500px] bg-[#1727eb] md:px-28">
-            <div className="w-full flex flex-col mx-4 mt-6 gap-y-14 px-6 items-center md:items-start  md:px-0 md:ml-10 md:w-1/2 md:gap-y-16 md:mt-12">
+          <section className="flex w-full mb-2 flex-row h-[500px] bg-[#1727eb] md:px-28">
+            <div className="w-full flex flex-col mx-4 mt-6 gap-y-10 px-6 items-center md:items-start  md:px-0 md:ml-10 md:w-1/2 md:  md:mt-7">
               <div className="flex flex-col justify-center items-center mt-16 gap-10">
                 <h3 className="font-extrabold text-3xl text-white">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -23,7 +23,7 @@ const HomePage = () => {
                   vehicula eu mauris non, maximus rutrum nisl.
                 </h4>
               </div>
-              <div className="md:w-1/2">
+              <div className="md:w-full lg:mt-8 ">
                 <button className="py-3 px-6 md:px-10 rounded-md text-sm font-bold hover:shadow-lg  bg-white text-[#1727eb]">
                   Solicitar Demonstração{" "}
                 </button>
