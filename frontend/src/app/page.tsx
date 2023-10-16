@@ -17,14 +17,14 @@ const HomePage = () => {
                 <h3 className="font-extrabold text-3xl text-white">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 </h3>
-                <h4 className="font-normal text-sm text-white">
+                <h4 className="font-sm text-base text-white">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
                   sed tellus a tellus maximus placerat. Nulla lacus arcu,
                   vehicula eu mauris non, maximus rutrum nisl.
                 </h4>
               </div>
               <div className="md:w-1/2">
-                <button className="py-3 px-6 md:px-10 rounded-md text-sm font-semibold bg-white text-[#1727eb]">
+                <button className="py-3 px-6 md:px-10 rounded-md text-sm font-bold hover:shadow-lg  bg-white text-[#1727eb]">
                   Solicitar Demonstração{" "}
                 </button>
               </div>
@@ -40,12 +40,11 @@ const HomePage = () => {
           <div className="w-full h-[20px] bg-gradient-to-r from-blue-500 via-blue-700 to-black"></div>
           <Image
             src={bannerImage}
-            className="object-contain"
+            className="object-contain "
             alt="Banner Image from Home Page"
           />
-          <div className="w-full h-[20px] bg-gradient-to-r from-blue-500 via-blue-700 to-black"></div>
 
-          <div className="h-auto flex flex-col bg-[#1727eb] items-center justify-center md:flex-row md:gap-x-10 md:px-30 py-8">
+          <div className="h-auto flex flex-col bg-[#1727eb] items-center justify-center md:flex-row md:gap-x-10 md:px-30 pb-8 pt-4">
             <h3 className="font-light max-md:border-b py-4 md:border-r border-white md:p-8 md:text-sm text-xl md:font-medium text-white">
               Lorem ipsum dolor sit amet
             </h3>
