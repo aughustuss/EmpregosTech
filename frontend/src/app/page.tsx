@@ -11,7 +11,7 @@ const HomePage = () => {
       <div className="w-full h-full bg-[#1727eb] overflow-y-hidden pt-12 md:pt-12 ">
         <div className="h-full">
           <section className="flex w-full flex-row h-[500px] bg-[#1727eb]">
-            <div className="w-full flex flex-col mx-4 mt-12 gap-y-16 md:ml-10 md:w-1/2 md:gap-y-10 md:mt-12">
+            <div className="w-full flex flex-col mx-4 mt-6 gap-y-14 px-6 items-center md:items-start  md:px-0 md:ml-10 md:w-1/2 md:gap-y-16 md:mt-12">
               <div className="flex flex-col justify-center items-center mt-16 gap-10">
                 <h3 className="font-extrabold text-3xl text-white">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
