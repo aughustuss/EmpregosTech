@@ -3,6 +3,7 @@
 import NavBar from "@/components/NavBar/NavBar";
 import Image from "next/image";
 import LogoImage from "../../public/images/logoTechJobs.png";
+import bannerImage from "../../public/images/bannerImage.jpg";
 
 const HomePage = () => {
   return (
@@ -37,7 +38,14 @@ const HomePage = () => {
               />
             </div>
           </section>
-          <div className="w-full h-[40px] bg-gradient-to-r from-blue-500 via-blue-700 to-black"></div>
+          <div className="w-full h-[20px] bg-gradient-to-r from-blue-500 via-blue-700 to-black"></div>
+          <Image
+            src={bannerImage}
+            className=""
+            alt="Banner Image from Home Page"
+          />
+          <div className="w-full h-[20px] bg-gradient-to-r from-blue-500 via-blue-700 to-black"></div>
+
           <div className="h-auto flex flex-col bg-[#1727eb] items-center justify-center md:flex-row md:gap-x-10 md:px-30 py-8">
             <h3 className="font-light max-md:border-b py-4 md:border-r border-white md:p-8 md:text-sm text-xl md:font-medium text-white">
               Lorem ipsum dolor sit amet
