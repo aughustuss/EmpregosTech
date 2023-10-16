@@ -32,16 +32,15 @@ const HomePage = () => {
             <div className="w-1/2 h-full  hidden md:flex md:items-center md:justify-center">
               <Image
                 src={LogoImage}
-                className="object-content"
+                className="object-contain"
                 alt="Picture of the author"
-                width={500}
               />
             </div>
           </section>
           <div className="w-full h-[20px] bg-gradient-to-r from-blue-500 via-blue-700 to-black"></div>
           <Image
             src={bannerImage}
-            className=""
+            className="object-contain"
             alt="Banner Image from Home Page"
           />
           <div className="w-full h-[20px] bg-gradient-to-r from-blue-500 via-blue-700 to-black"></div>
