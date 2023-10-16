@@ -31,7 +31,7 @@ const SignIn = () => {
 
   return (
     <div className="flex flex-col items-center w-full h-screen overflow-y-auto justify-center ">
-      <div className="bg-white p-8  w-full md:w-2/4 lg:w-1/3 ">
+      <div className="bg-white p-8  w-full md:w-[25%]  ">
         <Heading
           title="Olá, Bem vindo(a) de volta"
           subtitle="Entre com seus dados para continuar"
