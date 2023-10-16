@@ -31,7 +31,7 @@ const SignIn = () => {
 
   return (
     <div className="flex flex-col items-center w-full h-auto justify-center ">
-      <div className="bg-white p-6  w-full md:w-1/3 ">
+      <div className="bg-white p-6  w-full md:w-1/4 ">
         <Heading title="Olá, Bem vindo(a)" subtitle="Crie sua Conta" />
         <form
           className="mt-4 flex flex-col gap-y-3 w-full"
