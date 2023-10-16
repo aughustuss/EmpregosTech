@@ -8,10 +8,10 @@ const HomePage = () => {
   return (
     <>
       <NavBar />
-      <div className="w-full h-screen bg-black pt-12 overflow-y-hidden">
-        <div className="h-auto">
+      <div className="w-full h-full bg-[#1727eb] pt-12 md:pt-12 ">
+        <div className="h-screen">
           <section className="flex w-full flex-row h-[500px] bg-[#1727eb]">
-            <div className="w-1/2 flex flex-col ml-10 gap-y-10 mt-12">
+            <div className="w-full flex flex-col mx-4 mt-8 gap-y-8 md:ml-10 md:w-1/2 md:gap-y-10 md:mt-12">
               <div className="flex flex-col justify-center items-center mt-16 gap-10">
                 <h3 className="font-extrabold text-4xl text-white">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -22,13 +22,13 @@ const HomePage = () => {
                   vehicula eu mauris non, maximus rutrum nisl.
                 </h4>
               </div>
-              <div className="w-1/2">
+              <div className="md:1/2">
                 <button className="py-3 px-10 rounded-md text-sm font-semibold bg-white text-[#1727eb]">
                   Solicitar Demonstração{" "}
                 </button>
               </div>
             </div>
-            <div className="w-1/2 h-full  flex items-center justify-center">
+            <div className="w-1/2 h-full  hidden md:flex md:items-center md:justify-center">
               <Image
                 src={LogoImage}
                 className="object-content"
@@ -38,14 +38,14 @@ const HomePage = () => {
             </div>
           </section>
           <div className="w-full h-[40px] bg-gradient-to-r from-blue-500 via-blue-700 to-black"></div>
-          <div className="h-[10%] flex items-center justify-center gap-x-10 bg-[#1727eb] px-36 py-8">
-            <h3 className="border-r border-white p-8 text-xl font-medium text-white">
+          <div className="h-auto flex flex-col bg-[#1727eb] items-center justify-center  md:flex-row md:gap-x-10  md:px-30 py-8">
+            <h3 className="font-light max-md:border-b py-4 md:border-r border-white md:p-8 text-xl md:font-medium text-white">
               Lorem ipsum dolor sit amet
             </h3>
-            <h3 className="text-xl text-white font-medium">
+            <h3 className="font-light  max-md:border-b py-4 text-xl text-white md:font-medium">
               Lorem ipsum dolor sit amet
             </h3>
-            <h3 className="border-l border-white p-8 text-xl text-white font-medium">
+            <h3 className="md:border-l py-4 font-light  border-white md:p-8 text-xl text-white md:font-medium">
               Lorem ipsum dolor sit amet
             </h3>
           </div>
