@@ -31,7 +31,7 @@ const NavBar = () => {
             isMenuOpen ? "max-md:block" : "max-md:hidden"
           } w-full md:block md:w-auto`}
         >
-          <ul className="font-medium flex flex-col p-4 md:p-0 mt-4  border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0 ">
+          <ul className="font-medium flex flex-col p-2 md:p-0 mt-4  border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0 ">
             <NavBarItem href="/signUp" text="Login" />
             <NavBarItem href="/signIn" text="Cadastro" />
           </ul>

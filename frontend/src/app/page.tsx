@@ -8,12 +8,12 @@ const HomePage = () => {
   return (
     <>
       <NavBar />
-      <div className="w-full h-full bg-[#1727eb] pt-12 md:pt-12 ">
-        <div className="h-screen">
+      <div className="w-full h-full bg-[#1727eb] overflow-y-hidden pt-12 md:pt-12 ">
+        <div className="h-full">
           <section className="flex w-full flex-row h-[500px] bg-[#1727eb]">
-            <div className="w-full flex flex-col mx-4 mt-8 gap-y-8 md:ml-10 md:w-1/2 md:gap-y-10 md:mt-12">
+            <div className="w-full flex flex-col mx-4 mt-12 gap-y-16 md:ml-10 md:w-1/2 md:gap-y-10 md:mt-12">
               <div className="flex flex-col justify-center items-center mt-16 gap-10">
-                <h3 className="font-extrabold text-4xl text-white">
+                <h3 className="font-extrabold text-3xl text-white">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 </h3>
                 <h4 className="font-normal text-sm text-white">
@@ -22,8 +22,8 @@ const HomePage = () => {
                   vehicula eu mauris non, maximus rutrum nisl.
                 </h4>
               </div>
-              <div className="md:1/2">
-                <button className="py-3 px-10 rounded-md text-sm font-semibold bg-white text-[#1727eb]">
+              <div className="md:w-1/2">
+                <button className="py-3 px-6 md:px-10 rounded-md text-sm font-semibold bg-white text-[#1727eb]">
                   Solicitar Demonstração{" "}
                 </button>
               </div>
@@ -38,7 +38,7 @@ const HomePage = () => {
             </div>
           </section>
           <div className="w-full h-[40px] bg-gradient-to-r from-blue-500 via-blue-700 to-black"></div>
-          <div className="h-auto flex flex-col bg-[#1727eb] items-center justify-center  md:flex-row md:gap-x-10  md:px-30 py-8">
+          <div className="h-auto flex flex-col bg-[#1727eb] items-center justify-center md:flex-row md:gap-x-10 md:px-30 py-8">
             <h3 className="font-light max-md:border-b py-4 md:border-r border-white md:p-8 text-xl md:font-medium text-white">
               Lorem ipsum dolor sit amet
             </h3>
