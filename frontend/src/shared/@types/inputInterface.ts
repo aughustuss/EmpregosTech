@@ -4,7 +4,7 @@ export interface InputProps {
     id: string;
     label: string;
     errors?: FieldError;
-    register: UseFormRegister<FieldValues>;
+    register: UseFormRegister<any>;
     required?: boolean;
     disabled?: boolean;
     type: React.HTMLInputTypeAttribute;

@@ -2,10 +2,11 @@
 
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
 import Heading from "@/components/Heading";
+import { DataRegister, UserRegister } from "@/helpers/apiHelper";
 
 const SignIn = () => {
   const router = useRouter();
@@ -13,25 +14,24 @@ const SignIn = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FieldValues>({
+  } = useForm<DataRegister>({
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      birthDate: "",
-      email: "",
-      confirmEmail: "",
-      password: "",
-      confirmPassword: "",
+      ucFirstName: "",
+      ucLastName: "",
+      ucBirthDate: "",
+      ucEmail: "",
+      ucPassword: "",
+   
     },
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = (data: any) => {
-    console.log(data);
+  const onSubmit = async(data: DataRegister) => {
+    await UserRegister(data)
   };
 
   return (
     <div className="flex flex-col items-center w-full h-auto justify-center ">
-      <div className="bg-white p-6  w-full md:w-1/3 ">
+      <div className="bg-white p-6 w-full md:w-[25%]  ">
         <Heading title="Olá, Bem vindo(a)" subtitle="Crie sua Conta" />
         <form
           className="mt-4 flex flex-col gap-y-3 w-full"
@@ -39,14 +39,14 @@ const SignIn = () => {
         >
           <Input
             label="Primeiro Nome"
-            id="firstName"
+            id="ucFirstName"
             register={register}
             type="text"
             required
           />
           <Input
             label="Ultimo Nome"
-            id="lastName"
+            id="ucLastName"
             register={register}
             type="text"
             required
@@ -54,14 +54,14 @@ const SignIn = () => {
 
           <Input
             label="Data de Nascimento"
-            id="birthDate"
+            id="ucBirthDate"
             register={register}
             type="date"
             required
           />
           <Input
             label="E-mail"
-            id="email"
+            id="ucEmail"
             register={register}
             type="email"
             required
@@ -75,7 +75,7 @@ const SignIn = () => {
           />
           <Input
             label="Senha"
-            id="password"
+            id="ucPassword"
             register={register}
             type="password"
             required

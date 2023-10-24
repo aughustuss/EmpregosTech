@@ -1,3 +1,7 @@
 {
+<<<<<<< HEAD
+=======
+    "java.configuration.updateBuildConfiguration": "disabled",
+>>>>>>> c57e5fe793f011540a32d7be0c935f0264a2ee06
     "java.compile.nullAnalysis.mode": "automatic"
 }

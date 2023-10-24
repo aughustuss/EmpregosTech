@@ -7,7 +7,7 @@ const Button = ({ text, type, ...props }: ButtonProps) => {
     <button
       {...props}
       type={type}
-      className="p-4 rounded-2xl shadow-sm focus:shadow-lg bg-black text-white font-semibold w-full"
+      className="p-4 rounded-2xl shadow-sm focus:shadow-lg bg-[#1727eb] text-white font-semibold w-full"
     >
       {text}
     </button>
