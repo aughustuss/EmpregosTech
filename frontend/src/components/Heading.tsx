@@ -1,8 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import nextLogo from "../../public/next.svg";
-import Image from "next/image";
 import Logo from "./Logo";
 
 interface HeadingProps {

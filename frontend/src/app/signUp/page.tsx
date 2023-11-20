@@ -1,71 +1,100 @@
 "use client";
 
-import { useState } from "react";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import Button from "@/components/Button";
+import Input from "@/components/Input";
+import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
-import Button from "@/components/Button";
-import Container from "@/components/Container";
-import Input from "@/components/Input";
-import Link from "next/link";
 import Heading from "@/components/Heading";
-import { UserLogin } from "@/helpers/apiHelper";
+import { DataRegister, UserRegister } from "@/helpers/apiHelper";
 
 const SignIn = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FieldValues>({
+  } = useForm<DataRegister>({
     defaultValues: {
-      email: "",
-      password: "",
+      ucFirstName: "",
+      ucLastName: "",
+      ucBirthDate: "",
+      ucEmail: "",
+      ucPassword: "",
+   
     },
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data: any) => {
-    setIsLoading(true);
-    const login = await UserLogin(data)
-    
+  const onSubmit = async(data: DataRegister) => {
+    await UserRegister(data)
   };
 
   return (
-    <div className="flex flex-col items-center w-full h-screen overflow-y-auto justify-center ">
-      <div className="bg-white p-8  w-full md:w-[25%]  ">
-        <Heading
-          title="Olá, Bem vindo(a) de volta"
-          subtitle="Entre com seus dados para continuar"
-        />
+    <div className="flex flex-col items-center w-full h-auto justify-center ">
+      <div className="bg-transparent p-6 w-full md:w-[25%]  ">
+        <Heading title="Olá, Bem vindo(a)" subtitle="Crie sua Conta" />
         <form
-          className="mt-4 flex flex-col gap-y-3"
+          className="mt-4 flex flex-col gap-y-3 w-full"
           onSubmit={handleSubmit(onSubmit)}
         >
           <Input
-            label="E-mail"
-            id="email"
+            label="Primeiro Nome"
+            id="ucFirstName"
             register={register}
-            type="email"
+            type="text"
+            required
+          />
+          <Input
+            label="Ultimo Nome"
+            id="ucLastName"
+            register={register}
+            type="text"
             required
           />
 
           <Input
+            label="Data de Nascimento"
+            id="ucBirthDate"
+            register={register}
+            type="date"
+            required
+          />
+          <Input
+            label="E-mail"
+            id="ucEmail"
+            register={register}
+            type="email"
+            required
+          />
+          <Input
+            label="Confirme seu E-mail"
+            id="confirmEmail"
+            register={register}
+            type="email"
+            required
+          />
+          <Input
             label="Senha"
-            id="password"
+            id="ucPassword"
+            register={register}
+            type="password"
+            required
+          />
+          <Input
+            label="Confirme sua Senha"
+            id="confirmPassword"
             register={register}
             type="password"
             required
           />
 
-          <Button text="Login" type="submit" />
+          <Button text="Continuar" type="submit" />
 
           <div className="mt-4 text-center">
             <p className="text-sm text-gray-600">
-              Ainda não possui uma conta?{" "}
+              Já possui conta?{" "}
               <span
-                className="text-blue-500 cursor-pointer"
+                className="text-primary cursor-pointer"
                 onClick={() => router.push("/signIn")}
               >
                 Clique aqui

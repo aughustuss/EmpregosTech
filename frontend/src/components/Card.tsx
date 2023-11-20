@@ -10,10 +10,10 @@ import {
 
 const Card = () => {
   return (
-    <div className="w-full bg-white border border-gray-200 rounded-lg hover:shadow-md hover:transition  ">
-      <div className="flex flex-row items-center my-4 ml-[24px]  gap-x-4">
+    <div className="w-full bg-transparent border rounded-lg py-6 hover:shadow-md hover:transition flex flex-col gap-y-4 px-2">
+      <div className="flex flex-row items-center  gap-4">
         <img
-          className="w-14 h-14 rounded-full shadow-lg"
+          className="w-14 h-14 rounded-full"
           src="https://as1.ftcdn.net/v2/jpg/03/53/11/00/1000_F_353110097_nbpmfn9iHlxef4EDIhXB1tdTD0lcWhG9.jpg"
         />
         <div className="flex flex-row justify-between w-full">
@@ -31,19 +31,21 @@ const Card = () => {
           </div>
         </div>
       </div>
-      <div className="flex gap-x-2 ml-[24px] mb-4 ">
+      <div className="flex gap-2 flex-wrap text-sm">
         <TagCard text="#It" />
         <TagCard text="#Tech" />
         <TagCard text="#Design" />
         <TagCard text="#React" />
       </div>
 
-      <div className="flex mt-2. space-x-3 md:mt-6 items-center justify-end mb-4 mx-5">
+      <div className="flex items-center justify-end flex-row gap-x-4">
         <div className="flex flex-row gap-x-2">
-          <div>
+          <a href="#">
             <AiOutlineInstagram size={24} />
-          </div>
-          <AiOutlineGithub size={24} />
+          </a>
+          <a href="#">
+            <AiOutlineGithub size={24} />
+          </a>
         </div>
         <a
           href="#"

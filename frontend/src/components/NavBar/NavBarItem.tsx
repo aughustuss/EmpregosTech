@@ -12,7 +12,7 @@ const NavBarItem = ({ href, text, primary }: NavBarItemProps) => {
     <li>
       <Link
         href={href}
-        className={`block py-2 px-2 text-[#1727eb] font-semibold text-base  hover:text-white hover:bg-[#1727eb] rounded-lg md:inline-block md:mt-0 md:ml-4`}
+        className={`block py-2 px-4 transition duration-300 text-primary text-base md:text-body  hover:text-offwhite hover:bg-primary rounded-lg `}
       >
         {text}
       </Link>

@@ -2,14 +2,15 @@
 
 import { ButtonProps } from "@/shared/@types/buttonInterface";
 
-const Button = ({ text, type, ...props }: ButtonProps) => {
+const Button: React.FC<ButtonProps> = ({ text, type, ...props }) => {
   return (
     <button
       {...props}
       type={type}
-      className="p-4 rounded-2xl shadow-sm focus:shadow-lg bg-[#1727eb] text-white font-semibold w-full"
+      className="px-4 py-3 h-full rounded-xl shadow-sm focus:shadow-lg hover:shadow-sm bg-primary text-white font-semibold text-sm hover:bg-primary/80 transition duration-300"
     >
       {text}
+      
     </button>
   );
 };

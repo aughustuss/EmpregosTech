@@ -1,14 +1,14 @@
+import Button from "../Button";
 import FilterHeading from "./FilterHeading";
 import FilterItem from "./FilterItem";
 import FilterItemContainer from "./FilterItemContainer";
-import FilterSearch from "./FilterSearch";
 
 const Filter = () => {
   return (
-    <aside className="w-[16%] hidden md:block fixed z-0 left-0 pt-14 border-r-2 h-screen pb-6  ">
+    <aside className="lg:w-[16%] md:w-[20%] hidden md:flex md:flex-col md:gap-y-2  bg-white left-0 pt-20 h-full pb-6 px-2 ">
       <FilterHeading primaryName="Filtros" secondaryName="Limpar" />
      
-      <FilterItemContainer name="Categoria">
+      <FilterItemContainer name="Stack">
         <FilterItem text="React" />
         <FilterItem text="It" />
         <FilterItem text="Tech" />
@@ -16,7 +16,7 @@ const Filter = () => {
         <FilterItem text="Angular" />
       </FilterItemContainer>
 
-      <FilterItemContainer name="Nível">
+      <FilterItemContainer name="Senioridade">
         <FilterItem text="Júnior" />
         <FilterItem text="Pleno" />
         <FilterItem text="Sênior" />
@@ -29,6 +29,7 @@ const Filter = () => {
         <FilterItem text="Bahia" />
         <FilterItem text="Pernambuco" />
       </FilterItemContainer>
+      <Button type="submit" text="Filtrar" className="py-2" />
     </aside>
   );
 };

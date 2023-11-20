@@ -13,6 +13,7 @@ const Input = ({
   type = "text",
   required,
   disabled,
+  placeholder
 }: InputProps) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -21,15 +22,16 @@ const Input = ({
   };
 
   return (
-    <div className="flex justify-center gap-y-2 flex-col">
+    <div className="flex justify-center gap-y-2 flex-col w-full">
       <label className="text-sm font-semibold">{label}</label>
-      <div className="relative">
+      <div className="relative w-full">
         <input
           id={id}
           disabled={disabled}
           type={showPassword ? "text" : type}
           {...register(id, { required })}
-          className="px-2 py-2 rounded-2xl border-2 border-neutral-300 focus:outline-none focus:border-primary-500 w-full"
+          className="p-2 rounded-xl border-2 border-bordercolor w-full text-sm"
+          placeholder={placeholder}
         />
         {type === "password" && (
           <button
