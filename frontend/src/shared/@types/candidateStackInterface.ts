@@ -1,3 +1,4 @@
 export interface CandidateStackProps {
-    stackname: string;
+    id?: number;
+    stackName: string;
 }

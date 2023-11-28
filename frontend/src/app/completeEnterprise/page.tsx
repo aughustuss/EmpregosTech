@@ -2,6 +2,7 @@
 import Button from '@/components/Button';
 import Heading from '@/components/Heading';
 import Input from '@/components/Input';
+import RegisterInput from '@/components/RegisterInput';
 import { useRouter } from 'next/navigation';
 import React from 'react'
 import { useForm } from 'react-hook-form';
@@ -27,26 +28,11 @@ const CompleteEnterpriseRegistration = () => {
               className="mt-4 flex flex-col gap-y-3 w-full"
               onSubmit={handleSubmit(onSubmit)}
             >
-              <Input
+              <RegisterInput
                 label="CPF"
                 id="ucFirstName"
                 register={register}
                 type="text"
-                required
-              />
-              <Input
-                label="Link para seu GitHub"
-                id="ucLastName"
-                register={register}
-                type="text"
-                required
-              />
-  
-              <Input
-                label="Link para seu Instagram"
-                id="ucBirthDate"
-                register={register}
-                type="date"
                 required
               />
               <Button text="Completar" type="submit" />

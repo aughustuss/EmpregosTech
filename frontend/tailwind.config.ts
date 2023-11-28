@@ -15,7 +15,8 @@ const config: Config = {
       },
       fontFamily: {
         "body": ['var(--body-font)'],
-        "title": ['var(--title-font)']
+        "title": ['var(--title-font)'],
+        "cv": ['var(--cv-font)']
       },
       colors:{
         "primary": "#1727eb",
@@ -30,7 +31,7 @@ const config: Config = {
       },
       fontSize: {
         "title": "2rem",
-        "subtitle": "1.5rem",
+        "subtitle": "1rem",
         "body": "0.9rem",
       }
     },

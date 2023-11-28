@@ -1,14 +1,14 @@
 export interface CandidateExpsProps {
-    experienceRole: string;
-    experienceEnterprise: string;
-    experienceDescription:string;
-    experienceType: CandidateExpsExpTypeProps
-    experienceStartDate: Date;
-    experienceEndDate: Date;
+    ecrRxperienceRole: string;
+    ecrExperienceEnterprise: string;
+    ecrExperienceDescription:string;
+    ecrExperienceType: CandidateExpsExpTypeProps
+    ecrExperienceStartDate: Date;
+    ecrExperienceEndDate: Date;
 }
 
 enum CandidateExpsExpTypeProps {
-    INTERNSHIP,
+    ESTÁGIO,
     CLT,
-    FREELANCE
+    PJ
 }
