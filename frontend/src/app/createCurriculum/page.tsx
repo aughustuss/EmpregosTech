@@ -6,7 +6,7 @@ import Input from "@/components/Input";
 import NavBar from "@/components/NavBar/NavBar";
 import { CandidateStackProps } from "@/shared/@types/candidateStackInterface";
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { FaCheck } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { MdArrowDropUp } from "react-icons/md";
@@ -21,14 +21,16 @@ import {
 import "react-accessible-accordion/dist/fancy-example.css";
 import { CandidateExpsProps } from "@/shared/@types/candidateExpsInterface";
 import { CandidateCourseProps } from "@/shared/@types/candidateCourseInterface";
-import { CandidateLanguageProps, LanguageInterfaceEnumProps } from "@/shared/@types/candidateLanguageInterface";
-import Select from "@/components/Select";
+import {
+  CandidateLanguageProps,
+  LanguageInterfaceEnumProps,
+} from "@/shared/@types/candidateLanguageInterface";
 import Footer from "@/components/Footer/Footer";
+import { CourseRegister, CurriculumCreate, ExpRegister, LanguageRegister, StackRegister } from "@/helpers/apiHelper";
+import { EnumType } from "typescript";
+import { CurriculumInfosCreate } from "@/shared/@types/curriculumInfos";
 
 const CreateCurriculum = () => {
-
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
-
   const [expandedAccordion, setExpandedAccordion] = useState<string>("techacc");
   const handleAccordionChange = (uuid: string) => {
     setExpandedAccordion(uuid);
@@ -38,53 +40,76 @@ const CreateCurriculum = () => {
   const [candidateStacks, setCandidateStacks] = useState<CandidateStackProps[]>(
     []
   );
-  const [stackInputCount, setStackInputCount] = useState<number>(0);
-
   const [candidateExps, setCandidateExps] = useState<CandidateExpsProps[]>([]);
-  const [expInputCount, setExpInputCount] = useState<number>(0);
-
-  const [candidateCourses, setCandidateCourses] = useState<CandidateCourseProps[]>([]);
-  const [csInputCount, setCsInputCount] = useState<number>(0);
-
-  const [candidateLanguages, setCandidateLanguages] = useState<CandidateLanguageProps[]>([]);
-  const [lnInputCount, setLnInputCount] = useState<number>(0);
-
+  const [candidateCourses, setCandidateCourses] = useState<
+    CandidateCourseProps[]
+  >([]);
+  const [candidateLanguages, setCandidateLanguages] = useState<
+    CandidateLanguageProps[]
+  >([]);
 
   const languageProficiency: Array<string> = [
-    'APRENDENDO',
-    'INICIANTE',
-    'INTERMEDIÁRIO',
-    'AVANÇADO',
-    'FLUENTE'
+    "APRENDENDO",
+    "INICIANTE",
+    "INTERMEDIÁRIO",
+    "AVANÇADO",
+    "FLUENTE",
+  ];
+
+  const experienceType: Array<string> = [
+    "ESTÁGIO",
+    "CLT",
+    "PJ"
   ]
 
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    getValues,
-  } = useForm();
+  const seniority: Array<string> = [
+    "ESTAGIÁRIO",
+    "JUNIOR",
+    "PLENO",
+    "SÊNIOR",
+    "STAFF_ENGINEER"
+  ]
 
-  const handleOptionSelect = (option: string) => {
-    setSelectedOption(option);
-  };
+  const { register, handleSubmit, getValues, control } = useForm();
 
-  const organizeExpFormData = (formData: any) => {
+
+  const organizeExpFormData = (
+    formData: any,
+    existingExps: CandidateExpsProps[]
+  ) => {
     const expKeys = Object.keys(formData).filter((key) =>
-      key.startsWith("exp-")
+      key.startsWith("cs-")
     );
-    const exps: Array<any> = [];
-    expKeys.forEach((expKey: any) => {
-      const expNumberMatch = expKey.match(/\d+/);
+    const exps: CandidateExpsProps[] = [...existingExps];
 
-      if (expNumberMatch) {
-        const expNumber: string = expNumberMatch[0];
-        const expObject = exps.find((exp) => exp[`exp-${expNumber}`]);
-        if (expObject) {
-          expObject[expKey] = formData[expKey];
+    expKeys.forEach((expKey: any) => {
+      const expNumberMath = expKey.match(/\d+/);
+
+      if (expNumberMath) {
+        const expNumber: string = expNumberMath[0];
+        const existingExpIndex = exps.findIndex(
+          (exp) => exp.ecrRxperienceRole === formData[`exp-${expNumber}-role`]
+        );
+
+        if (existingExpIndex !== -1) {
+          exps[existingExpIndex] = {
+            ...exps[existingExpIndex],
+            ecrRxperienceRole: formData[`exp-${expNumber}-role`],
+            ecrExperienceDescription: formData[`exp-${expNumber}-description`],
+            ecrExperienceEnterprise: formData[`exp-${expNumber}-enterprise`],
+            ecrExperienceType: formData[`exp-${expNumber}-type`],
+            ecrExperienceEndDate: formData[`exp-${expNumber}-enddate`],
+            ecrExperienceStartDate: formData[`exp-${expNumber}-startdate`],
+
+          };
         } else {
-          const newExp = {
-            [`exp-${expNumber}`]: { [expKey]: formData[expKey] },
+          const newExp: CandidateExpsProps = {
+            ecrRxperienceRole: formData[`exp-${expNumber}-role`],
+            ecrExperienceDescription: formData[`exp-${expNumber}-description`],
+            ecrExperienceEnterprise: formData[`exp-${expNumber}-enterprise`],
+            ecrExperienceType: formData[`exp-${expNumber}-type`],
+            ecrExperienceEndDate: formData[`exp-${expNumber}-enddate`],
+            ecrExperienceStartDate: formData[`exp-${expNumber}-startdate`],
           };
           exps.push(newExp);
         }
@@ -93,6 +118,7 @@ const CreateCurriculum = () => {
 
     return exps;
   };
+  
 
   const organizeCourseFormData = (
     formData: any,
@@ -109,23 +135,23 @@ const CreateCurriculum = () => {
       if (courseNumberMatch) {
         const courseNumber: string = courseNumberMatch[0];
         const existingCourseIndex = courses.findIndex(
-          (course) => course.courseName === formData[`cs-${courseNumber}-name`]
+          (course) => course.cscrCourseName === formData[`cs-${courseNumber}-name`]
         );
 
         if (existingCourseIndex !== -1) {
           courses[existingCourseIndex] = {
             ...courses[existingCourseIndex],
-            courseName: formData[`cs-${courseNumber}-name`],
-            courseInstitution: formData[`cs-${courseNumber}-institution`],
-            courseStartDate: formData[`cs-${courseNumber}-startdate`],
-            courseEndDate: formData[`cs-${courseNumber}-enddate`],
+            cscrCourseName: formData[`cs-${courseNumber}-name`],
+            cscrCourseInstitution: formData[`cs-${courseNumber}-institution`],
+            cscrCourseStartDate: formData[`cs-${courseNumber}-startdate`],
+            cscrCourseEndDate: formData[`cs-${courseNumber}-enddate`],
           };
         } else {
           const newCourse: CandidateCourseProps = {
-            courseName: formData[`cs-${courseNumber}-name`],
-            courseInstitution: formData[`cs-${courseNumber}-institution`],
-            courseStartDate: formData[`cs-${courseNumber}-startdate`],
-            courseEndDate: formData[`cs-${courseNumber}-enddate`],
+            cscrCourseName: formData[`cs-${courseNumber}-name`],
+            cscrCourseInstitution: formData[`cs-${courseNumber}-institution`],
+            cscrCourseStartDate: formData[`cs-${courseNumber}-startdate`],
+            cscrCourseEndDate: formData[`cs-${courseNumber}-enddate`],
           };
           courses.push(newCourse);
         }
@@ -135,34 +161,40 @@ const CreateCurriculum = () => {
     return courses;
   };
 
-  const organizeLanguageFormData = (formData: any, existingLanguages: CandidateLanguageProps[]) => {
-    const langKeys = Object.keys(formData).filter((key) => key.startsWith("lang-"));
+  const organizeLanguageFormData = (
+    formData: any,
+    existingLanguages: CandidateLanguageProps[]
+  ) => {
+    const langKeys = Object.keys(formData).filter((key) =>
+      key.startsWith("lang-")
+    );
     const languages: CandidateLanguageProps[] = [...existingLanguages];
-  
+
     langKeys.forEach((langKey: any) => {
       const langNumberMatch = langKey.match(/\d+/);
-  
+
       if (langNumberMatch) {
         const langNumber: string = langNumberMatch[0];
-        const existingLangIndex = languages.findIndex((lang) => lang.languageName === formData[`lang-${langNumber}-name`]);
-  
+        const existingLangIndex = languages.findIndex(
+          (lang) => lang.lcrLanguageName === formData[`lang-${langNumber}-name`]
+        );
+
         if (existingLangIndex !== -1) {
           languages[existingLangIndex] = {
             ...languages[existingLangIndex],
-            languageName: formData[`lang-${langNumber}-name`],
-            languageProficiency: formData[`lang-${langNumber}-proficiency`],
+            lcrLanguageName: formData[`lang-${langNumber}-name`],
+            lcrLanguageProficiency: formData[`lang-${langNumber}-proficiency`],
           };
         } else {
           const newLanguage: CandidateLanguageProps = {
-            languageName: formData[`lang-${langNumber}-name`],
-            languageProficiency: formData[`lang-${langNumber}-proficiency`],
+            lcrLanguageName: formData[`lang-${langNumber}-name`],
+            lcrLanguageProficiency: formData[`lang-${langNumber}-proficiency`],
           };
           languages.push(newLanguage);
         }
       }
     });
-  
-    // Now you have an array of organized languages
+
     return languages;
   };
 
@@ -172,55 +204,57 @@ const CreateCurriculum = () => {
       const existingStackIndex = index < prevStacks.length ? index : -1;
       if (existingStackIndex !== -1) {
         const updatedStacks = [...prevStacks];
-        updatedStacks[existingStackIndex] = { stackname: stackValue };
+        updatedStacks[existingStackIndex] = { stackName: stackValue };
         return updatedStacks;
       } else {
-        return [...prevStacks, { stackname: stackValue }];
+        return [...prevStacks, { stackName: stackValue }];
       }
     });
   };
 
   const saveNewExperience = (index: number) => {
     const newExperience: CandidateExpsProps = {
-      experienceRole: getValues(`exp-${index}-role`),
-      experienceEnterprise: getValues(`exp-${index}-enterprise`),
-      experienceDescription: getValues(`exp-${index}-description`),
-      experienceType: getValues(`exp-${index}-type`),
-      experienceStartDate: getValues(`exp-${index}-startdate`),
-      experienceEndDate: getValues(`exp-${index}-enddate`),
+      ecrRxperienceRole: getValues(`exp-${index}-role`),
+      ecrExperienceEnterprise: getValues(`exp-${index}-enterprise`),
+      ecrExperienceDescription: getValues(`exp-${index}-description`),
+      ecrExperienceType: getValues(`exp-${index}-type`),
+      ecrExperienceStartDate: getValues(`exp-${index}-startdate`),
+      ecrExperienceEndDate: getValues(`exp-${index}-enddate`),
     };
     setCandidateExps((prevExperiences) => [...prevExperiences, newExperience]);
   };
 
   const saveNewCourse = (index: number) => {
     const newCourse: CandidateCourseProps = {
-      courseName: getValues(`cs-${index}-name`),
-      courseInstitution: getValues(`cs-${index}-institution`),
-      courseStartDate: getValues(`cs-${index}-startdate`),
-      courseEndDate: getValues(`cs-${index}-enddate`),
+      cscrCourseName: getValues(`cs-${index}-name`),
+      cscrCourseInstitution: getValues(`cs-${index}-institution`),
+      cscrCourseStartDate: getValues(`cs-${index}-startdate`),
+      cscrCourseEndDate: getValues(`cs-${index}-enddate`),
     };
     const courseExists = candidateCourses.some(
-      (course) => course.courseName === newCourse.courseName
+      (course) => course.cscrCourseName === newCourse.cscrCourseName
     );
 
     if (!courseExists) {
       setCandidateCourses((prevCourses) => [...prevCourses, newCourse]);
     } else {
-      console.log("Curso com este nome ja existe:", newCourse.courseName);
+      console.log("Curso com este nome ja existe:", newCourse.cscrCourseName);
     }
   };
 
   const saveNewLanguage = (index: number) => {
     const newLanguage: CandidateLanguageProps = {
-      languageName: getValues(`ln-${index}-name`),
-      languageProficiency: getValues(`ln-${index}-proficiency`),
+      lcrLanguageName: getValues(`ln-${index}-name`),
+      lcrLanguageProficiency: getValues(`ln-${index}-proficiency`),
     };
-    const languageExists = candidateLanguages.some((lang) => lang.languageName === newLanguage.languageName);
-  
+    const languageExists = candidateLanguages.some(
+      (lang) => lang.lcrLanguageName === newLanguage.lcrLanguageName
+    );
+
     if (!languageExists) {
       setCandidateLanguages((prevLanguages) => [...prevLanguages, newLanguage]);
     } else {
-      console.log('Idioma já cadastrado:', newLanguage.languageName);
+      console.log("Idioma já cadastrado:", newLanguage.lcrLanguageName);
     }
   };
 
@@ -229,32 +263,48 @@ const CreateCurriculum = () => {
     array: any[],
     setArray: React.Dispatch<React.SetStateAction<any[]>>
   ) => {
-    const updatedStacks = array.filter((_, index) => index !== inputId);
-    setArray(updatedStacks);
+    setArray([...array.slice(0, inputId), ...array.slice(inputId + 1)]);
   };
 
-  const handleNewInput = (
-    action: number,
-    setAction: React.Dispatch<React.SetStateAction<number>>
+  const handleInputAppend = (
+    array: any[],
+    setArray: React.Dispatch<React.SetStateAction<any[]>>
   ) => {
-    setAction(action + 1);
+    setArray([...array, ""]);
   };
 
-
-  const submitCvInfos = (data: any) => {
-    const exps = organizeExpFormData(candidateExps);
-    const courses = organizeCourseFormData(
-      candidateCourses,
-      candidateCourses
+  const submitCvInfos = async (data: any) => {
+    const exps = organizeExpFormData(candidateExps, candidateExps);
+    const courses = organizeCourseFormData(candidateCourses, candidateCourses);
+    const languages = organizeLanguageFormData(
+      candidateLanguages,
+      candidateLanguages
     );
-    const languages = organizeLanguageFormData(candidateLanguages, candidateLanguages);
-    console.log(data);
+    const cvInfos: CurriculumInfosCreate = {
+      ccrUserRole: getValues("profilesubtitle"),
+      linkGitHub: getValues("gitlinkacc"),
+      ccrUserSeniority: getValues("profileseniority"),
+      linkInstagram: getValues("profileinstalink"),
+      linkPortifolio: getValues("profileportfoliolink"),
+      objetivo: getValues("candidateobjective"),
+      profile: getValues("candidateprofile"),
+    };
+    await Promise.all([
+      CurriculumCreate(cvInfos),
+      LanguageRegister(languages.slice(1)),
+      ExpRegister(exps.slice(1)),
+      CourseRegister(courses.slice(1)),
+    ]).then((res) => {
+      console.log(res)
+    }).catch((err) => {
+      console.log(err);
+    })
   };
 
   return (
     <>
       <NavBar />
-      <main className="pb-[100px] my-[100px] mx-10 lex flex-col gap-y-4 w-full md:w-2/3 p-8 shadow-lg rounded-xl">
+      <main className="pb-[100px] my-[100px] mx-auto px-10 lex flex-col gap-y-4 w-full md:w-2/3 p-8 shadow-lg rounded-xl">
         <Accordion
           onChange={(uuid) => handleAccordionChange(uuid.toString())}
           className="flex flex-col gap-y-4"
@@ -287,19 +337,7 @@ const CreateCurriculum = () => {
                     />
                     <InformationContainer
                       text="Email"
-                      label="Título de perfil"
-                    />
-                    <InformationContainer
-                      text="Email"
                       label="Endereço de email"
-                    />
-                    <InformationContainer
-                      text="Email"
-                      label="Endereço do GitHub"
-                    />
-                    <InformationContainer
-                      text="Email"
-                      label="Endereço do Instagram"
                     />
                   </div>
                 </div>
@@ -310,10 +348,240 @@ const CreateCurriculum = () => {
             onSubmit={handleSubmit(submitCvInfos)}
             className="w-full flex flex-col gap-y-4 pt-6 justify-between"
           >
-            <div className="flex flex-col gap-y-6 px-4 w-full">
+            <div className="flex flex-col gap-y-6 w-full">
               <p className="border-b border-bordercolor text-lg">
                 Informações para preencher
               </p>
+              <AccordionItem
+                uuid={"roleacc"}
+                className="border-2 rounded-xl p-2"
+              >
+                <AccordionItemHeading>
+                  <AccordionItemButton className="flex flex-row items-center justify-between">
+                    <p>Subtítulo do perfil</p>
+                    <p>
+                      {isAccordionExpanded("roleacc") ? (
+                        <MdArrowDropUp className="rotate-0" />
+                      ) : (
+                        <MdArrowDropUp className="rotate-180" />
+                      )}
+                    </p>
+                  </AccordionItemButton>
+                </AccordionItemHeading>
+                <AccordionItemPanel>
+                  <Controller
+                    render={({ field: { name, onChange, value } }) => (
+                      <Input
+                        id={name}
+                        onChange={onChange}
+                        value={value}
+                        placeholder="Preencha o subtítulo do seu perfil. Ex: Desenvolvedor Web"
+                        type="text"
+                        required
+                      />
+                      
+                    )}
+                    name="profilesubtitle"
+                    control={control}
+                    defaultValue={""}
+                  />
+                </AccordionItemPanel>
+              </AccordionItem>
+
+              <AccordionItem
+                uuid={"seniorityacc"}
+                className="border-2 rounded-xl p-2"
+              >
+                <AccordionItemHeading>
+                  <AccordionItemButton className="flex flex-row items-center justify-between">
+                    <p>Senioridade</p>
+                    <p>
+                      {isAccordionExpanded("seniorityacc") ? (
+                        <MdArrowDropUp className="rotate-0" />
+                      ) : (
+                        <MdArrowDropUp className="rotate-180" />
+                      )}
+                    </p>
+                  </AccordionItemButton>
+                </AccordionItemHeading>
+                <AccordionItemPanel>
+                  <Controller
+                    render={({ field: { name, onChange, value } }) => (
+                      <select
+                      className="p-2 rounded-xl border-2 border-bordercolor w-full text-sm focus:outline"
+                      onChange={onChange}
+                      id={name}
+                    >
+                      {seniority.map((seniority, index) => (
+                        <option key={index} value={seniority}>
+                          {seniority}
+                        </option>
+                      ))}
+                    </select>
+                    )}
+                    name="profileseniority"
+                    control={control}
+                    defaultValue={""}
+                  />
+                </AccordionItemPanel>
+              </AccordionItem>
+
+              <AccordionItem
+                uuid={"gitlinkacc"}
+                className="border-2 rounded-xl p-2"
+              >
+                <AccordionItemHeading>
+                  <AccordionItemButton className="flex flex-row items-center justify-between">
+                    <p>Link para o seu Github</p>
+                    <p>
+                      {isAccordionExpanded("gitlinkacc") ? (
+                        <MdArrowDropUp className="rotate-0" />
+                      ) : (
+                        <MdArrowDropUp className="rotate-180" />
+                      )}
+                    </p>
+                  </AccordionItemButton>
+                </AccordionItemHeading>
+                <AccordionItemPanel>
+                  <Controller
+                    render={({ field: { name, onChange, value } }) => (
+                      <Input
+                        id={name}
+                        onChange={onChange}
+                        value={value}
+                        placeholder="Insira o link do seu Github para os recrutadores verem..."
+                        type="text"
+                        required
+                      />
+                    )}
+                    name="profilegithublink"
+                    control={control}
+                    defaultValue={""}
+                  />
+                </AccordionItemPanel>
+              </AccordionItem>
+
+              <AccordionItem
+                uuid={"instalinkacc"}
+                className="border-2 rounded-xl p-2"
+              >
+                <AccordionItemHeading>
+                  <AccordionItemButton className="flex flex-row items-center justify-between">
+                    <p>Link para o seu Instagram</p>
+                    <p>
+                      {isAccordionExpanded("instalinkacc") ? (
+                        <MdArrowDropUp className="rotate-0" />
+                      ) : (
+                        <MdArrowDropUp className="rotate-180" />
+                      )}
+                    </p>
+                  </AccordionItemButton>
+                </AccordionItemHeading>
+                <AccordionItemPanel>
+                  <Controller
+                    render={({ field: { name, onChange, value } }) => (
+                      <Input
+                        id={name}
+                        onChange={onChange}
+                        value={value}
+                        placeholder="Insira o link para o Instagram. Para facilitar o contato..."
+                        type="text"
+                        required
+                      />
+                    )}
+                    name="profileinstalink"
+                    control={control}
+                    defaultValue={""}
+                  />
+                </AccordionItemPanel>
+              </AccordionItem>
+
+              <AccordionItem
+                uuid={"portfolioacc"}
+                className="border-2 rounded-xl p-2"
+              >
+                <AccordionItemHeading>
+                  <AccordionItemButton className="flex flex-row items-center justify-between">
+                    <p>Link para o seu portfólio</p>
+                    <p>
+                      {isAccordionExpanded("portfolioacc") ? (
+                        <MdArrowDropUp className="rotate-0" />
+                      ) : (
+                        <MdArrowDropUp className="rotate-180" />
+                      )}
+                    </p>
+                  </AccordionItemButton>
+                </AccordionItemHeading>
+                <AccordionItemPanel>
+                  <Controller
+                    render={({ field: { name, onChange, value } }) => (
+                      <Input
+                        id={name}
+                        onChange={onChange}
+                        value={value}
+                        placeholder="Insira o link para o seu . Para facilitar o contato..."
+                        type="text"
+                        required
+                      />
+                    )}
+                    name="profileportfoliolink"
+                    control={control}
+                    defaultValue={""}
+                  />
+                </AccordionItemPanel>
+              </AccordionItem>
+
+              <AccordionItem
+                uuid={"profacc"}
+                className="border-2 rounded-xl p-2"
+              >
+                <AccordionItemHeading>
+                  <AccordionItemButton className="flex flex-row items-center justify-between">
+                    <p>Perfil</p>
+                    <p>
+                      {isAccordionExpanded("profacc") ? (
+                        <MdArrowDropUp className="rotate-0" />
+                      ) : (
+                        <MdArrowDropUp className="rotate-180" />
+                      )}
+                    </p>
+                  </AccordionItemButton>
+                </AccordionItemHeading>
+                <AccordionItemPanel>
+                  <textarea
+                    rows={6}
+                    placeholder="Conte um pouco sobre você, de forma breve e resumida."
+                    className="border-2 border-bordercolor rounded-xl p-2 w-full"
+                    {...register("candidateprofile", { required: true })}
+                  />
+                </AccordionItemPanel>
+              </AccordionItem>
+
+              <AccordionItem
+                uuid={"objacc"}
+                className="border-2 rounded-xl p-2"
+              >
+                <AccordionItemHeading>
+                  <AccordionItemButton className="flex flex-row items-center justify-between">
+                    <p>Objetivo</p>
+                    <p>
+                      {isAccordionExpanded("objacc") ? (
+                        <MdArrowDropUp className="rotate-0" />
+                      ) : (
+                        <MdArrowDropUp className="rotate-180" />
+                      )}
+                    </p>
+                  </AccordionItemButton>
+                </AccordionItemHeading>
+                <AccordionItemPanel>
+                  <textarea
+                    rows={6}
+                    placeholder="Conte o seu objetivo de carreira, também de forma breve e resumida."
+                    className="border-2 border-bordercolor rounded-xl p-2 w-full"
+                    {...register("candidateobjective", { required: true })}
+                  />
+                </AccordionItemPanel>
+              </AccordionItem>
 
               <AccordionItem
                 uuid={"techacc"}
@@ -334,17 +602,24 @@ const CreateCurriculum = () => {
                 <AccordionItemPanel>
                   <div className="flex flex-col gap-y-2 w-full">
                     <div className="flex flex-col w-full gap-2">
-                      {[...Array(stackInputCount)].map((_, index) => (
+                      {candidateStacks.map((stack, index) => (
                         <div
-                          key={index}
-                          className="flex flex-row items-center h-auto min-h-[40px] gap-x-2 w-full flex-wrap"
+                          key={stack.stackName}
+                          className="flex flex-row items-center h-auto min-h-[40px] gap-2 w-full flex-wrap"
                         >
-                          <Input
-                            id={`stack-${index}`}
-                            type="text"
-                            register={register}
-                            value={candidateStacks[index] || ""}
-                            placeholder="Nome da tecnologia..."
+                          <Controller
+                            render={({ field: { onChange, value, name } }) => (
+                              <Input
+                                id={name}
+                                onChange={onChange}
+                                value={value}
+                                placeholder="Digite o nome da tecnologia..."
+                                type="text"
+                              />
+                            )}
+                            name={`stack-${index}`}
+                            control={control}
+                            defaultValue={""}
                           />
                           <Button
                             type="button"
@@ -364,28 +639,11 @@ const CreateCurriculum = () => {
                           />
                         </div>
                       ))}
-
-                      {candidateStacks.length > 0 && (
-                        <p>Stacks adicionadas: </p>
-                      )}
-                      <div className="flex flex-row items-center flex-wrap gap-1">
-                        {candidateStacks.map((stack, index) => (
-                          <div
-                            key={index}
-                            className="flex flex-row flex-wrap gap-1 text-xs text-bodycolor"
-                          >
-                            <p>
-                              {stack.stackname.toLocaleUpperCase()}
-                              {index !== candidateStacks.length ? "," : ""}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
                     </div>
                     <Button
                       type="button"
                       onClick={() =>
-                        handleNewInput(stackInputCount, setStackInputCount)
+                        handleInputAppend(candidateStacks, setCandidateStacks)
                       }
                       text="Adicionar + Tecnologia"
                     ></Button>
@@ -409,49 +667,107 @@ const CreateCurriculum = () => {
                 <AccordionItemPanel>
                   <div className="flex flex-col gap-y-2 w-full">
                     <div className="flex flex-col w-full gap-2">
-                      {[...Array(expInputCount)].map((_, index) => (
+                      {candidateExps.map((exp, index) => (
                         <div
-                          key={index}
+                          key={exp.ecrExperienceEnterprise}
                           className="flex flex-col h-auto min-h-[200px] gap-1 w-full"
                         >
-                          <Input
-                            id={`exp-${index}-role`}
-                            type="text"
-                            register={register}
-                            placeholder="Cargo exercido"
+                          <Controller
+                            render={({ field: { onChange, value, name } }) => (
+                              <Input
+                                id={name}
+                                onChange={onChange}
+                                value={value}
+                                placeholder="Digite o cargo da sua experiência..."
+                                type="text"
+                              />
+                            )}
+                            name={`exp-${index}-role`}
+                            control={control}
+                            defaultValue={""}
                           />
-                          <Input
-                            id={`exp-${index}-enterprise`}
-                            type="text"
-                            register={register}
-                            placeholder="Nome da empresa"
+                          <Controller
+                            render={({ field: { onChange, value, name } }) => (
+                              <Input
+                                id={name}
+                                onChange={onChange}
+                                value={value}
+                                placeholder="Digite o nome da empresa..."
+                                type="text"
+                              />
+                            )}
+                            name={`exp-${index}-enterprise`}
+                            control={control}
+                            defaultValue={""}
                           />
-                          <Input
-                            id={`exp-${index}-experiencetype`}
-                            type="text"
-                            register={register}
-                            placeholder="Tipo de contrato"
+                          <Controller
+                            render={({ field: { onChange, value, name } }) => (
+                              <select
+                                className="p-2 rounded-xl border-2 border-bordercolor w-full text-sm focus:outline"
+                                onChange={onChange}
+                                id={name}
+                              >
+                                {experienceType.map(
+                                  (exp, index) => (
+                                    <option key={index} value={exp}>
+                                      {exp}
+                                    </option>
+                                  )
+                                )}
+                              </select>
+                            )}
+                            name={`exp-${index}-experiencetype`}
+                            control={control}
+                            defaultValue={""}
                           />
                           <div className="flex flex-row gap-x-2 items-center flex-wrap">
-                            <Input
-                              id={`exp-${index}-startdate`}
-                              type="date"
-                              register={register}
-                              placeholder="Data de início"
-                              label="Data início"
+                            <Controller
+                              render={({
+                                field: { onChange, value, name },
+                              }) => (
+                                <Input
+                                  id={name}
+                                  onChange={onChange}
+                                  value={value}
+                                  label="Data de início"
+                                  type="date"
+                                />
+                              )}
+                              name={`exp-${index}-startdate`}
+                              control={control}
+                              defaultValue={""}
                             />
-                            <Input
-                              id={`exp-${index}-enddate`}
-                              type="date"
-                              register={register}
-                              label="Data fim"
-                              placeholder="Data de término"
+                            <Controller
+                              render={({
+                                field: { onChange, value, name },
+                              }) => (
+                                <Input
+                                  id={name}
+                                  onChange={onChange}
+                                  value={value}
+                                  label="Data de término"
+                                  type="date"
+                                />
+                              )}
+                              name={`exp-${index}-enddate`}
+                              control={control}
+                              defaultValue={""}
                             />
                           </div>
-                          <textarea
-                            rows={6}
-                            placeholder="Descrição"
-                            className="border-2 border-bordercolor rounded-xl p-2"
+                          <Controller
+                            render={({ field: { onChange, value, name } }) => (
+                              <textarea
+                                id={name}
+                                onChange={onChange}
+                                value={value}
+                                rows={6}
+                                placeholder="Informe as suas tarefas na sua experiência..."
+                                className="border-2 border-bordercolor rounded-xl p-2 text-sm"
+                              />
+                            )}
+                            name={`exp-${index}-description`}
+                            control={control}
+                            defaultValue={""}
                           />
 
                           <div className="flex flex-row gap-x-2 w-full">
@@ -478,7 +794,7 @@ const CreateCurriculum = () => {
                     <Button
                       type="button"
                       onClick={() =>
-                        handleNewInput(expInputCount, setExpInputCount)
+                        handleInputAppend(candidateExps, setCandidateExps)
                       }
                       text="Adicionar + Experiência"
                     ></Button>
@@ -502,35 +818,71 @@ const CreateCurriculum = () => {
                 <AccordionItemPanel>
                   <div className="flex flex-col gap-y-2 w-full">
                     <div className="flex flex-col w-full gap-2">
-                      {[...Array(csInputCount)].map((_, index) => (
+                      {candidateCourses.map((course, index) => (
                         <div
-                          key={index}
+                          key={course.cscrCourseName}
                           className="flex flex-col items-center min-h-[100px] h-auto gap-2 w-full"
                         >
-                          <Input
-                            id={`cs-${index}-name`}
-                            type="text"
-                            register={register}
-                            placeholder="Nome do curso"
+                          <Controller
+                            render={({ field: { onChange, value, name } }) => (
+                              <Input
+                                id={name}
+                                onChange={onChange}
+                                value={value}
+                                placeholder="Digite o nome do curso..."
+                                type="text"
+                              />
+                            )}
+                            name={`cs-${index}-name`}
+                            control={control}
+                            defaultValue={""}
                           />
-                          <Input
-                            id={`cs-${index}-institution`}
-                            type="text"
-                            register={register}
-                            placeholder="Instituição do curso"
+                          <Controller
+                            render={({ field: { onChange, value, name } }) => (
+                              <Input
+                                id={name}
+                                onChange={onChange}
+                                value={value}
+                                placeholder="Digite o nome da instituição de ensino..."
+                                type="text"
+                              />
+                            )}
+                            name={`cs-${index}-institution`}
+                            control={control}
+                            defaultValue={""}
                           />
                           <div className="flex flex-row items-center gap-x-2 w-full flex-wrap">
-                            <Input
-                              id={`cs-${index}-startdate`}
-                              type="date"
-                              register={register}
-                              label="Início do curso"
+                            <Controller
+                              render={({
+                                field: { onChange, value, name },
+                              }) => (
+                                <Input
+                                  id={name}
+                                  onChange={onChange}
+                                  value={value}
+                                  label="Data de início"
+                                  type="date"
+                                />
+                              )}
+                              name={`cs-${index}-startdate`}
+                              control={control}
+                              defaultValue={""}
                             />
-                            <Input
-                              id={`cs-${index}-enddate`}
-                              type="date"
-                              register={register}
-                              label="Término do curso"
+                            <Controller
+                              render={({
+                                field: { onChange, value, name },
+                              }) => (
+                                <Input
+                                  id={name}
+                                  onChange={onChange}
+                                  value={value}
+                                  label="Data de término"
+                                  type="date"
+                                />
+                              )}
+                              name={`cs-${index}-enddate`}
+                              control={control}
+                              defaultValue={""}
                             />
                           </div>
                           <div className="flex flex-row items-center gap-x-2 w-full">
@@ -557,7 +909,7 @@ const CreateCurriculum = () => {
                     <Button
                       type="button"
                       onClick={() =>
-                        handleNewInput(csInputCount, setCsInputCount)
+                        handleInputAppend(candidateCourses, setCandidateCourses)
                       }
                       text="Adicionar + Curso"
                     ></Button>
@@ -581,23 +933,44 @@ const CreateCurriculum = () => {
                 <AccordionItemPanel>
                   <div className="flex flex-col gap-y-2 w-full">
                     <div className="flex flex-col w-full gap-2">
-                      {[...Array(lnInputCount)].map((_, index) => (
+                      {candidateLanguages.map((language, index) => (
                         <div
-                          key={index}
+                          key={language.lcrLanguageName}
                           className="flex flex-row items-center min-h-[100px] h-auto gap-2 w-full flex-wrap"
                         >
-                          <Input
-                            id={`ln-${index}-name`}
-                            type="text"
-                            register={register}
-                            placeholder="Idioma"
+                          <Controller
+                            render={({ field: { onChange, value, name } }) => (
+                              <Input
+                                id={name}
+                                onChange={onChange}
+                                value={value}
+                                placeholder="Digite o idioma..."
+                                type="text"
+                              />
+                            )}
+                            name={`ln-${index}-name`}
+                            control={control}
+                            defaultValue={""}
                           />
-                          <Select
-                            arrayToMap={languageProficiency}
-                            text="Selecione seu nível de proficiência"
-                            selectId={`ln-${index}-proficiency`}
-                            register={register}
-                            onSelect={handleOptionSelect}
+                          <Controller
+                            render={({ field: { onChange, name} }) => (
+                              <select
+                                className="p-2 rounded-xl border-2 border-bordercolor w-full text-sm focus:outline"
+                                onChange={onChange}
+                                id={name}
+                              >
+                                {languageProficiency.map(
+                                  (languagepro, index) => (
+                                    <option key={index} value={languagepro}>
+                                      {languagepro}
+                                    </option>
+                                  )
+                                )}
+                              </select>
+                            )}
+                            name={`ln-${index}-proficiency`}
+                            control={control}
+                            defaultValue={""}
                           />
                           <Button
                             type="button"
@@ -607,14 +980,25 @@ const CreateCurriculum = () => {
                           <Button
                             type="button"
                             text={<MdDelete />}
-                            onClick={() => deleteNewInput(index, candidateLanguages, setCandidateLanguages)}
+                            onClick={() =>
+                              deleteNewInput(
+                                index,
+                                candidateLanguages,
+                                setCandidateLanguages
+                              )
+                            }
                           />
                         </div>
                       ))}
                     </div>
                     <Button
                       type="button"
-                      onClick={() => handleNewInput(lnInputCount, setLnInputCount)}
+                      onClick={() =>
+                        handleInputAppend(
+                          candidateLanguages,
+                          setCandidateLanguages
+                        )
+                      }
                       text="Adicionar + Idioma"
                     ></Button>
                   </div>
@@ -625,7 +1009,7 @@ const CreateCurriculum = () => {
           </form>
         </Accordion>
       </main>
-      <Footer/>
+      <Footer />
     </>
   );
 };

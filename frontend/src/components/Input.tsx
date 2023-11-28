@@ -8,12 +8,12 @@ import { useState } from "react";
 const Input = ({
   id,
   label,
-  errors,
-  register,
   type = "text",
   required,
   disabled,
-  placeholder
+  onChange,
+  value,
+  placeholder,
 }: InputProps) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -29,7 +29,8 @@ const Input = ({
           id={id}
           disabled={disabled}
           type={showPassword ? "text" : type}
-          {...register(id, { required })}
+          onChange={onChange}
+          value={value}
           className="p-2 rounded-xl border-2 border-bordercolor w-full text-sm"
           placeholder={placeholder}
         />
@@ -43,7 +44,6 @@ const Input = ({
           </button>
         )}
       </div>
-      <p>{errors?.message}</p>
     </div>
   );
 };

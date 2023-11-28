@@ -11,12 +11,11 @@ const HomePage = () => {
   return (
     <>
       <NavBar />
-      <main className="flex flex-col gap-y-[100px]">
+      <main className="flex flex-col gap-y-[100px] px-[40px] sm:px-[60px] md:px-[100px]">
         <Banner />
         <UsedBy/>
         <Clients/>
         <Resume/>
-
       </main>
       <Footer/>
     </>

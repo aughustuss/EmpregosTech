@@ -1,6 +1,6 @@
 export interface CandidateLanguageProps {
-    languageName: string;
-    languageProficiency: LanguageInterfaceEnumProps
+    lcrLanguageName: string;
+    lcrLanguageProficiency: LanguageInterfaceEnumProps
 }
 
 export enum LanguageInterfaceEnumProps {

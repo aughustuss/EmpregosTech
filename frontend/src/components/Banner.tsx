@@ -10,7 +10,7 @@ const Banner = () => {
     <>
         <section className="pt-[80px] flex flex-col gap-y-6 w-full h-auto">
         <div className="flex md:flex-row flex-col w-full bg-transparent h-auto md:h-[600px] max-h-max ">
-          <div className="flex flex-col md:flex-row w-full h-full px-[100px] gap-4">
+          <div className="flex flex-col md:flex-row w-full h-full gap-4">
             <div className="w-full md:w-1/2 flex flex-col gap-y-6 py-[100px]">
               <div className="md:max-w-[500px] flex flex-col gap-y-4">
                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-black "><span className="text-primary underline">Impulsione</span> sua busca por uma oportunidade ou realocação no mercado de trabalho.</h1>

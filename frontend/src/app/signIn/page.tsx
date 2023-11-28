@@ -1,33 +1,38 @@
 "use client";
 
-import { useState } from "react";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { useState, useContext } from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-
+import { CgSpinner } from "react-icons/cg";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Heading from "@/components/Heading";
-import { UserLogin } from "@/helpers/apiHelper";
+import { DataLogin } from "@/helpers/apiHelper";
+import UserLoginContext from "@/contexts/UserLoginContext";
 
 const SignIn = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  
+  const { UserLogin } = useContext(UserLoginContext);
   const {
-    register,
     handleSubmit,
+    control,
     formState: { errors },
-  } = useForm<FieldValues>({
+  } = useForm<DataLogin>({
     defaultValues: {
-      email: "",
-      password: "",
+      ucEmail: "",
+      ucPassword: "",
     },
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data: any) => {
+  const onSubmit: SubmitHandler<DataLogin> = async (data: any) => {
     setIsLoading(true);
-    const login = await UserLogin(data)
-    
+    try {
+      await UserLogin(data);
+    } catch (err: any) {
+      setIsLoading(false);
+      console.log(err);
+    }
   };
 
   return (
@@ -41,23 +46,71 @@ const SignIn = () => {
           className="mt-4 flex flex-col gap-y-3"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <Input
-            label="E-mail"
-            id="email"
-            register={register}
-            type="email"
-            required
+          <Controller
+            name="ucEmail"
+            control={control}
+            defaultValue=""
+            rules={{
+              required: {
+                value: true,
+                message: "Preencha o seu email",
+              },
+              pattern: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
+            }}
+            render={({ field: { name, value, onChange } }) => (
+              <div>
+                <Input
+                  id={name}
+                  type="text"
+                  value={value}
+                  onChange={onChange}
+                  label="Email"
+                />
+                <small className="text-xs text-red-700">
+                  {errors.ucEmail &&
+                    (errors.ucEmail?.type === "required"
+                      ? errors.ucEmail.message
+                      : "Email inválido")}
+                </small>
+              </div>
+            )}
+          />
+          <Controller
+            name="ucPassword"
+            control={control}
+            defaultValue=""
+            rules={{
+              required: {
+                value: true,
+                message: "Preencha a sua senha",
+              },
+            }}
+            render={({ field: { name, value, onChange } }) => (
+              <div>
+                <Input
+                  id={name}
+                  type="password"
+                  value={value}
+                  onChange={onChange}
+                  label="Senha"
+                />
+                <small className="text-xs text-red-700">
+                  {errors.ucPassword?.message}
+                </small>
+              </div>
+            )}
           />
 
-          <Input
-            label="Senha"
-            id="password"
-            register={register}
-            type="password"
-            required
+          <Button
+            text={
+              !isLoading ? (
+                "Enviar"
+              ) : (
+                <CgSpinner className="animate-spin text-center w-full" />
+              )
+            }
+            type="submit"
           />
-
-          <Button text="Login" type="submit" />
 
           <div className="mt-4 text-center">
             <p className="text-sm text-bodycolor">
